@@ -78,8 +78,11 @@ jobs:
           cd package-list-action
           sed -i 's/<TargetFramework>net6.0<\/TargetFramework>/<TargetFramework>net8.0<\/TargetFramework>/g' PackageBuilder/PackageBuilder.csproj
           echo "Modified PackageBuilder.csproj to target .NET 8.0"
-          cat PackageBuilder/PackageBuilder.csproj
-
+          cat PackageBuilder/PackageBuilder.csproj      - name: Create required directories
+        run: |
+          mkdir -p package-list-action/docs
+          echo "Created docs directory in package-list-action"
+          
       - name: Run package listing generator
         working-directory: ./package-list-action
         env:
@@ -87,6 +90,7 @@ jobs:
         run: |
           dotnet run --project PackageBuilder/PackageBuilder.csproj -- \
             --package-listing-source-folder "../dist/listing" \
+            --list-publish-directory "./docs" \
             --package-listing-target-folder "../dist"
 
       - name: Upload final build
