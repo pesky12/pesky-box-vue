@@ -3,6 +3,7 @@ name: Build and Deploy Vue Project to GitHub Pages
 on:
   push:
     branches: [ "main" ] # Or your default branch
+  workflow_dispatch: {} # Allows manual triggering
 
 jobs:
   build_and_deploy:
