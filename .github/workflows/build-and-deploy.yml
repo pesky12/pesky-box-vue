@@ -71,6 +71,14 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+          
+      # Add this step to update the project to target .NET 8.0
+      - name: Update PackageBuilder to target .NET 8.0
+        run: |
+          cd package-list-action
+          sed -i 's/<TargetFramework>net6.0<\/TargetFramework>/<TargetFramework>net8.0<\/TargetFramework>/g' PackageBuilder/PackageBuilder.csproj
+          echo "Modified PackageBuilder.csproj to target .NET 8.0"
+          cat PackageBuilder/PackageBuilder.csproj
 
       - name: Run package listing generator
         working-directory: ./package-list-action
