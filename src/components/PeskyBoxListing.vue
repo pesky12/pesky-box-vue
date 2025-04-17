@@ -2,6 +2,7 @@
   <div class="col align-items-center content">
     <!-- Listing Info Header -->
     <div id="listingInfo" class="col mb-4 w-100 align-items-center">
+      <img src="@/assets/banner.png" alt="Listing Header Image" class="header-image mb-3">
       <h1>{{ listingInfo.name }}</h1>
       <div v-if="listingInfo.description" class="caption1 mb-2">{{ listingInfo.description }}</div>
       <div class="col align-items-center">
@@ -711,5 +712,12 @@ button svg {
 
 .documentation-link svg {
   fill: var(--secondary-cyan);
+}
+
+.header-image {
+  width: 100%;
+  max-height: 200px; /* Adjust as needed */
+  object-fit: cover; /* Or 'contain' depending on desired look */
+  border-radius: 8px; /* Optional: match container rounding */
 }
 </style>
