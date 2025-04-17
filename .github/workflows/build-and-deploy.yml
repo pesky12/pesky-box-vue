@@ -1,0 +1,121 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Vue app
+        run: npm run build
+
+      - name: Prepare for package listing
+        run: |
+          mkdir -p dist/listing
+          cp src/assets/source.json dist/listing/
+          cp src/assets/banner.png dist/listing/ || echo "Banner not found, skipping"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-site
+          path: dist/
+
+  generate-package-listing:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: main
+
+      - name: Checkout package-list-action
+        uses: actions/checkout@v4
+        with:
+          repository: pimaker/package-list-action
+          path: package-list-action
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: built-site
+          path: dist
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+          
+      # Add this step to update the project to target .NET 8.0
+      - name: Update PackageBuilder to target .NET 8.0
+        run: |
+          cd package-list-action
+          sed -i 's/<TargetFramework>net6.0<\/TargetFramework>/<TargetFramework>net8.0<\/TargetFramework>/g' PackageBuilder/PackageBuilder.csproj
+          echo "Modified PackageBuilder.csproj to target .NET 8.0"
+          cat PackageBuilder/PackageBuilder.csproj
+
+      - name: Run package listing generator
+        working-directory: ./package-list-action
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          dotnet run --project PackageBuilder/PackageBuilder.csproj -- \
+            --package-listing-source-folder "../dist/listing" \
+            --package-listing-target-folder "../dist"
+
+      - name: Upload final build
+        uses: actions/upload-artifact@v4
+        with:
+          name: final-site
+          path: dist/
+
+  deploy:
+    needs: generate-package-listing
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download final build
+        uses: actions/download-artifact@v4
+        with:
+          name: final-site
+          path: ./dist
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
