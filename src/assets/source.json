@@ -1,0 +1,42 @@
+{
+    "name":"Pesky's Box",
+    "id":"vpm.pesky.box",
+    "url":"https://pesky12.github.io/PeskyBox/index.json",
+    "author":{
+        "email":"Pesky12 on Discord!",
+        "name":"Pesky12",
+        "url":"https://github.com/pesky12"
+    },
+    "description":"Box full of my useful tools and utilities.",
+    "infoLink":{
+        "url": "https://github.com/pesky12/PeskyBox",
+        "text": "Learn More"
+    },
+    "bannerUrl":"banner.png",
+    "githubRepos":[
+        "source:pesky12/Seat-Collision-Manager",
+        "source:pesky12/Easy-Quality-Switch",
+        "source:pesky12/Badge-Manager"
+    ],
+    "packageMetadata":{
+        "source:pesky12/Seat-Collision-Manager": {
+            "customDescription": "A tool that helps manage seat collision settings for VRChat avatars.",
+            "documentation": {
+                "url": "https://github.com/pesky12/Seat-Collision-Manager/wiki",
+                "text": "Documentation"
+            }
+        },
+        "source:pesky12/Easy-Quality-Switch": {
+            "customDescription": "Simple tool to quickly switch between quality presets in Unity."
+        },
+        "source:pesky12/Badge-Manager": {
+            "customDescription": "Manage custom badges for your VRChat avatars easily.",
+            "documentation": {
+                "url": "https://github.com/pesky12/Badge-Manager/blob/main/README.md",
+                "text": "View Docs"
+            }
+        }
+    },
+    "packages":[
+    ]
+}
