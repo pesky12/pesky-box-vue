@@ -80,6 +80,12 @@ jobs:
           echo "Modified PackageBuilder.csproj to target .NET 8.0"
           cat PackageBuilder/PackageBuilder.csproj
 
+      - name: Prepare listing folder
+        run: |
+          mkdir -p dist/listing/Website
+          cp -r dist/* dist/listing/Website/
+          rm -rf dist/listing/Website/listing
+
       - name: Run package listing generator
         working-directory: ./package-list-action
         env:
