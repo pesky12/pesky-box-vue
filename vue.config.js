@@ -3,6 +3,6 @@ module.exports = defineConfig({
   transpileDependencies: true,
   lintOnSave: false, // Prevents ESLint errors from failing the build
   publicPath: process.env.NODE_ENV === 'production'
-    ? '/' + process.env.REPOSITORY_NAME + '/'
+    ? '/' + (process.env.REPOSITORY_NAME || 'PeskyBoxVue') + '/'
     : '/'
 })
