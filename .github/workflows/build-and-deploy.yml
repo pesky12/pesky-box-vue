@@ -18,6 +18,7 @@ concurrency:
 env:
   listPublishDirectory: Website
   pathToCi: ci
+  REPOSITORY_NAME: pesky-box-vue
 
 jobs:
   build:
@@ -82,14 +83,15 @@ jobs:
           cd ${{ env.pathToCi }}
           sed -i 's/<TargetFramework>net6.0<\/TargetFramework>/<TargetFramework>net8.0<\/TargetFramework>/g' PackageBuilder/PackageBuilder.csproj
           echo "Modified PackageBuilder.csproj to target .NET 8.0"
-          cat PackageBuilder/PackageBuilder.csproj
-
-      - name: Prepare website directory
+          cat PackageBuilder/PackageBuilder.csproj      - name: Prepare website directory
         run: |
           mkdir -p ${{ env.listPublishDirectory }}
           cp -r dist/* ${{ env.listPublishDirectory }}/
+          # Copy source.json to both the website directory and the repository root
           cp dist/listing/source.json ${{ env.listPublishDirectory }}/
+          cp dist/listing/source.json ./
           cp dist/listing/banner.png ${{ env.listPublishDirectory }}/ || echo "Banner not found, skipping"
+          cp dist/listing/banner.png ./ || echo "Banner not found, skipping"
 
       - name: Restore Cache
         uses: actions/cache@v4
