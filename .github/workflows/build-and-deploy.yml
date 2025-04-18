@@ -83,7 +83,9 @@ jobs:
           cd ${{ env.pathToCi }}
           sed -i 's/<TargetFramework>net6.0<\/TargetFramework>/<TargetFramework>net8.0<\/TargetFramework>/g' PackageBuilder/PackageBuilder.csproj
           echo "Modified PackageBuilder.csproj to target .NET 8.0"
-          cat PackageBuilder/PackageBuilder.csproj      - name: Prepare website directory
+          cat PackageBuilder/PackageBuilder.csproj
+          
+      - name: Prepare website directory
         run: |
           mkdir -p ${{ env.listPublishDirectory }}
           cp -r dist/* ${{ env.listPublishDirectory }}/
